@@ -22,24 +22,24 @@
 <div class="card">
     <h1>MoneyShield AI Scam Detector</h1>
     <p class="intro">
-        MoneyShield uses artificial intelligence and machine learning to estimate whether a suspicious financial message or link is likely to be a scam. Enter the indicators below to receive a prediction and scam probability.
+        MoneyShield uses a machine-learning model to estimate whether a suspicious financial message or link is likely to be a scam. Enter the indicators below to receive a prediction and scam probability.
     </p>
 
     <form action="/predict" method="post">
         <label for="link_risk_score">Link risk score (0–100)</label>
         <input id="link_risk_score" name="link_risk_score" type="number" min="0" max="100" step="1" required value="{{ link_risk_score if link_risk_score is defined else '' }}">
-        <small>Higher values mean the link or message contains more suspicious indicators.</small>
+        <small>Higher values mean the link/message contains more suspicious indicators.</small>
 
         <label for="sender_trust_score">Sender trust score (0–100)</label>
         <input id="sender_trust_score" name="sender_trust_score" type="number" min="0" max="100" step="1" required value="{{ sender_trust_score if sender_trust_score is defined else '' }}">
         <small>Higher values mean the sender appears more trustworthy.</small>
 
-        <label for="requests_sensitive_info">Does the message request sensitive information?</label>
+        <label for="requests_sensitive_info">Does it request sensitive information?</label>
         <select id="requests_sensitive_info" name="requests_sensitive_info" required>
             <option value="0" {% if requests_sensitive_info is defined and requests_sensitive_info == 0 %}selected{% endif %}>No</option>
             <option value="1" {% if requests_sensitive_info is defined and requests_sensitive_info == 1 %}selected{% endif %}>Yes</option>
         </select>
-        <small>Examples: password, card details, banking login or verification code.</small>
+        <small>Examples: password, card details, banking login, verification code.</small>
 
         <button type="submit">Check scam risk</button>
     </form>

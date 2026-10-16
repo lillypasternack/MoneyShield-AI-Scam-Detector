@@ -1,31 +1,38 @@
-# MoneyShield – Scam Risk Classification
+# MoneyShield AI Scam Detector
 
-MoneyShield is a Fintech concept designed to help young users identify suspicious financial messages and links before they interact with them. This project uses a logistic-regression model to classify a message/link as **likely legitimate (0)** or **likely scam (1)**.
+MoneyShield is a Fintech concept designed to help young users identify suspicious financial messages and links before they interact with them. This project uses a logistic-regression machine-learning model to classify a message or link as **likely legitimate (0)** or **likely scam (1)**.
+
+## Live application
+
+https://lillypasternack.pythonanywhere.com
 
 ## Machine-learning problem
 
 - **Population:** Young digital-banking and online-payment users who receive financial messages, links, emails or texts.
 - **Task:** Binary classification.
+- **Model:** Logistic Regression.
 - **Target:** `is_scam`
   - `0` = likely legitimate
   - `1` = likely scam
 
 ### Input variables
 
-1. `link_risk_score` – 0 to 100. Higher values represent more suspicious URL/message indicators.
+1. `link_risk_score` – 0 to 100. Higher values represent more suspicious URL or message indicators.
 2. `sender_trust_score` – 0 to 100. Higher values represent a more trustworthy sender.
 3. `requests_sensitive_info` – 0 or 1. Whether the message asks for passwords, banking details, card data or verification codes.
 
-The dataset is synthetic and generated with a fixed NumPy seed so the results are reproducible.
+The synthetic dataset is generated with a fixed NumPy seed so the results are reproducible.
 
 ## Files
 
-- `fintech.py` – generates synthetic data, trains and validates the model, saves the dataset and model.
-- `fintech.xlsx` – synthetic dataset.
+- `fintech.py` – generates synthetic data, trains and validates the model, and saves the dataset and model.
 - `fintech.joblib` – trained logistic-regression model.
 - `flask_app.py` – Flask web application and API.
 - `templates/index.html` – HTML user interface.
 - `requirements.txt` – Python dependencies.
+- `ADAPTED_PROMPT.txt` – adapted LLM prompt used for the assignment.
+
+Running `fintech.py` also generates `fintech.xlsx`.
 
 ## Run the training code
 
@@ -42,7 +49,7 @@ pip install -r requirements.txt
 python3 flask_app.py
 ```
 
-Open `http://127.0.0.1:5000/`.
+Then open `http://127.0.0.1:5000/`.
 
 ## API endpoint
 
@@ -53,23 +60,19 @@ Example request:
 ```bash
 curl -X POST https://lillypasternack.pythonanywhere.com/api/predict \
   -H "Content-Type: application/json" \
-  -d '{
-    "link_risk_score": 85,
-    "sender_trust_score": 20,
-    "requests_sensitive_info": 1
-  }'
+  -d '{"link_risk_score":90,"sender_trust_score":10,"requests_sensitive_info":1}'
 ```
 
-Example JSON response:
+Example JSON response from the deployed model:
 
 ```json
 {
   "prediction": 1,
   "label": "likely_scam",
-  "scam_probability": 0.97,
+  "scam_probability": 0.9481,
   "inputs": {
-    "link_risk_score": 85,
-    "sender_trust_score": 20,
+    "link_risk_score": 90.0,
+    "sender_trust_score": 10.0,
     "requests_sensitive_info": 1
   }
 }
@@ -78,33 +81,20 @@ Example JSON response:
 The endpoint also accepts GET parameters, for example:
 
 ```text
-https://lillypasternack.pythonanywhere.com/api/predict?link_risk_score=85&sender_trust_score=20&requests_sensitive_info=1
+https://lillypasternack.pythonanywhere.com/api/predict?link_risk_score=90&sender_trust_score=10&requests_sensitive_info=1
 ```
 
 ## PythonAnywhere deployment
 
-1. Upload this project to PythonAnywhere.
-2. Open a Bash console and install requirements if needed.
-3. Run `python3 fintech.py` if you want to regenerate the model on PythonAnywhere.
-4. Go to **Web → Add a new web app → Manual configuration → Python 3.x**.
-5. Edit the WSGI file so it imports the Flask app from `flask_app.py`.
-6. Reload the web app.
-7. Test the public root URL and `/api/predict` endpoint.
+The application is deployed at:
 
-A typical WSGI import is:
+https://lillypasternack.pythonanywhere.com
 
-```python
-import sys
-path = '/home/lillypasternack/mysite'
-if path not in sys.path:
-    sys.path.append(path)
+The WSGI configuration imports the Flask app from `flask_app.py`.
 
-from flask_app import app as application
-```
+## Course submission
 
-## Course submission reminder
-
-- Invite Professor Manoel Gadi as teacher on PythonAnywhere using username `mfalonso`.
-- Submit the GitHub repository link.
+- PythonAnywhere teacher username: `mfalonso`
+- Submit this GitHub repository link.
 - Submit the public PythonAnywhere URL.
-- Do not upload passwords, tokens or credentials.
+- No passwords, API tokens or credentials are included in this repository.
